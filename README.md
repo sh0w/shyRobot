@@ -1,4 +1,4 @@
-# shyRobot
+# shy robot
 C, Arduino microcontroller
 
 this shy, anxious robot is afraid of you and rolls away when you try to touch it.
