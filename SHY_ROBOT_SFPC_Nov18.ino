@@ -4,7 +4,7 @@ int motor1_Speed=9;
   
 int motor2_A=5;
 int motor2_B=10;
-int motor2_Speed=9;
+int motor2_Speed=9; // both motors are the same speed
 
 const int trigPin = 4;
 const int echoPin = 2;
@@ -79,40 +79,33 @@ void loop(){
     if(!currentlyEscaping) {
       currentlyEscaping = true;
       Serial.println("OMG OMG OMG i am so scared i gotta leave!!!!!");
-      for (int i=0; i < 255; i+=5){
-        digitalWrite(motor1_A,LOW); // A = HIGH and B = LOW means the motor will turn right
-        digitalWrite(motor1_B,HIGH);
-        analogWrite(motor1_Speed,i); // speed counts from 0 to 255
-        digitalWrite(motor2_A,LOW); // A = HIGH and B = LOW means the motor will turn right
-        digitalWrite(motor2_B,HIGH);
-        analogWrite(motor2_Speed,i); // speed counts from 0 to 255
-        delay(5);
-      }
-    } else {
-      Serial.println("you're still too close - i'm still leaving!!!!!");
-      digitalWrite(motor1_A,LOW); // A = HIGH and B = LOW means the motor will turn right
-      digitalWrite(motor1_B,HIGH);
-      analogWrite(motor1_Speed,255); // speed counts from 0 to 255
-      digitalWrite(motor2_A,LOW); // A = HIGH and B = LOW means the motor will turn right
-      digitalWrite(motor2_B,HIGH);
-      analogWrite(motor2_Speed,255); // speed counts from 0 to 255
-      delay(10);
-    }
-  } else {
-    if(currentlyEscaping && cm > 35) {
-      
-      Serial.println("phew, i escaped you! i can slow down now!!");
-      /* /// slow down:
-      for (int i=255; i > 0; i-=5){
+      for (int i=0; i < 255; i+=5) {
         digitalWrite(motor1_A,LOW);
         digitalWrite(motor1_B,HIGH);
         analogWrite(motor1_Speed,i);
         digitalWrite(motor2_A,LOW);
         digitalWrite(motor2_B,HIGH);
         analogWrite(motor2_Speed,i);
-        delay(10);
-      }*/
+        delay(5);
+      }
+    } else {
+      Serial.println("you're still too close - i'm still leaving!!!!!");
       
+      // both motors spin forward:
+      digitalWrite(motor1_A,LOW);
+      digitalWrite(motor1_B,HIGH);
+      analogWrite(motor1_Speed,255);
+      digitalWrite(motor2_A,LOW);
+      digitalWrite(motor2_B,HIGH);
+      analogWrite(motor2_Speed,255);
+      delay(10);
+    }
+  } else {
+    if(currentlyEscaping && cm > 35) {
+      
+      Serial.println("phew, i escaped you! i can slow down now!!");
+      
+      // move very slowly:
       digitalWrite(motor1_A,LOW);
       digitalWrite(motor1_B,HIGH);
       analogWrite(motor1_Speed,50); 
@@ -127,28 +120,31 @@ void loop(){
     }
   }
 
+  // obstacle detected!!! => turn around!
   if(cm <= 35) {
-    // TURN AROUND IF OBSTACLE DETECTED!
+    // stop escaping:
     currentlyEscaping = false;
+    
+    // choose direction randomly:
     if(random(10) < 5) {
       for (int i=0; i < 255; i+=5){
-        digitalWrite(motor1_A,LOW); // A = HIGH and B = LOW means the motor will turn right
+        digitalWrite(motor1_A,LOW);
         digitalWrite(motor1_B,HIGH);
-        analogWrite(motor1_Speed,i); // speed counts from 0 to 255
-        digitalWrite(motor2_A,HIGH); // A = HIGH and B = LOW means the motor will turn right
+        analogWrite(motor1_Speed,i);
+        digitalWrite(motor2_A,HIGH);
         digitalWrite(motor2_B,LOW);
-        analogWrite(motor2_Speed,i); // speed counts from 0 to 255
-        delay(13);
+        analogWrite(motor2_Speed,i);
+        delay(10);
       }
     } else {
       for (int i=0; i < 255; i+=5){
-        digitalWrite(motor1_A,HIGH); // A = HIGH and B = LOW means the motor will turn right
+        digitalWrite(motor1_A,HIGH);
         digitalWrite(motor1_B,LOW);
-        analogWrite(motor1_Speed,i); // speed counts from 0 to 255
-        digitalWrite(motor2_A,LOW); // A = HIGH and B = LOW means the motor will turn right
+        analogWrite(motor1_Speed,i);
+        digitalWrite(motor2_A,LOW);
         digitalWrite(motor2_B,HIGH);
-        analogWrite(motor2_Speed,i); // speed counts from 0 to 255
-        delay(13);
+        analogWrite(motor2_Speed,i);
+        delay(10);
       }
     }
   }
